@@ -1,0 +1,288 @@
+{% comment %}
+Smart Schedule Generator
+- 支持任意semester_start日期  
+- 根据class_days自动计算所有上课日期
+- 自动匹配week编号与实际上课日期
+{% endcomment %}
+
+{% assign semester_start_str = site.data.course_schedule.course_schedule.semester_start %}
+{% assign semester_end_str = site.data.course_schedule.course_schedule.semester_end %}
+{% assign class_days = site.data.course_schedule.course_schedule.class_days %}
+{% assign lecture_sequence = site.data.course_schedule.lecture_sequence %}
+{% assign all_schedule_items = "" | split: "" %}
+{% assign lecture_dates = "" | split: "" %}
+
+{% comment %} 创建星期名称到数字的映射 (0=Sunday, 1=Monday, ..., 6=Saturday) {% endcomment %}
+{% assign day_name_to_num = "sunday:0,monday:1,tuesday:2,wednesday:3,thursday:4,friday:5,saturday:6" | split: "," %}
+
+{% comment %} 获取配置的上课日的数字 {% endcomment %}
+{% assign class_day_numbers = "" | split: "" %}
+{% for class_day in class_days %}
+    {% for day_pair in day_name_to_num %}
+        {% assign parts = day_pair | split: ":" %}
+        {% if parts[0] == class_day.day %}
+            {% assign day_num = parts[1] | plus: 0 %}
+            {% assign class_day_numbers = class_day_numbers | push: day_num %}
+            {% break %}
+        {% endif %}
+    {% endfor %}
+{% endfor %}
+
+{% comment %} 生成学期内所有上课日期 {% endcomment %}
+{% assign semester_start_timestamp = semester_start_str | date: "%s" | plus: 0 %}
+{% assign semester_end_timestamp = semester_end_str | date: "%s" | plus: 0 %}
+{% assign semester_start_day_num = semester_start_str | date: "%w" | plus: 0 %}
+{% assign holiday_dates = site.data.course_schedule.course_schedule.holidays %}
+{% assign offset_to_monday = semester_start_day_num | minus: 1 %}
+{% if semester_start_day_num == 0 %}
+    {% assign offset_to_monday = 6 %}
+{% endif %}
+{% assign offset_seconds = offset_to_monday | times: 86400 %}
+{% assign first_week_start_timestamp = semester_start_timestamp | minus: offset_seconds %}
+
+{% assign all_class_dates = "" | split: "" %}
+{% assign current_timestamp = semester_start_timestamp %}
+
+{% comment %} 从学期开始日期向前扫描，找到所有上课日 {% endcomment %}
+{% for day_offset in (0..365) %}
+    {% assign additional_seconds = day_offset | times: 86400 %}
+    {% assign check_timestamp = semester_start_timestamp | plus: additional_seconds %}
+    {% if check_timestamp > semester_end_timestamp %}
+        {% break %}
+    {% endif %}
+    
+    {% assign check_day_num = check_timestamp | date: "%w" | plus: 0 %}
+    
+    {% comment %} 检查这一天是否是上课日 {% endcomment %}
+    {% for class_day_num in class_day_numbers %}
+        {% if check_day_num == class_day_num %}
+            {% assign check_date = check_timestamp | date: "%Y-%m-%d" %}
+            {% assign is_holiday = false %}
+            {% if holiday_dates %}
+                {% for holiday in holiday_dates %}
+                    {% if holiday == check_date %}
+                        {% assign is_holiday = true %}
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+
+            {% if is_holiday %}
+                {% assign item_key = check_date | append: "|no_class|No Class" %}
+                {% assign all_schedule_items = all_schedule_items | push: item_key %}
+            {% else %}
+                {% assign all_class_dates = all_class_dates | push: check_date %}
+            {% endif %}
+            {% break %}
+        {% endif %}
+    {% endfor %}
+{% endfor %}
+
+{% comment %} 现在将课程内容与实际日期匹配 {% endcomment %}
+{% if lecture_sequence and lecture_sequence.size > 0 %}
+    {% for lecture in lecture_sequence %}
+        {% if all_class_dates[forloop.index0] %}
+            {% assign actual_date = all_class_dates[forloop.index0] %}
+            {% assign item_key = actual_date | append: "|lecture|" | append: forloop.index0 %}
+            {% assign all_schedule_items = all_schedule_items | push: item_key %}
+            {% assign lecture_dates = lecture_dates | push: actual_date %}
+        {% endif %}
+    {% endfor %}
+{% else %}
+    {% assign class_date_index = 0 %}
+
+    {% for week_data in site.data.course_schedule.lectures %}
+        {% comment %} 为这一周的每个配置的课程日找到对应的实际日期 {% endcomment %}
+        
+        {% for class_day in class_days %}
+            {% assign day_name = class_day.day %}
+            {% assign day_content = nil %}
+            
+            {% comment %} 获取这一天的课程内容 {% endcomment %}
+            {% case day_name %}
+                {% when "monday" %}
+                    {% assign day_content = week_data.monday %}
+                {% when "tuesday" %}
+                    {% assign day_content = week_data.tuesday %}
+                {% when "wednesday" %}
+                    {% assign day_content = week_data.wednesday %}
+                {% when "thursday" %}
+                    {% assign day_content = week_data.thursday %}
+                {% when "friday" %}
+                    {% assign day_content = week_data.friday %}
+                {% when "saturday" %}
+                    {% assign day_content = week_data.saturday %}
+                {% when "sunday" %}
+                    {% assign day_content = week_data.sunday %}
+            {% endcase %}
+            
+            {% if day_content and all_class_dates[class_date_index] %}
+                {% assign actual_date = all_class_dates[class_date_index] %}
+                {% assign item_key = actual_date | append: "|lecture|" | append: day_content.topic %}
+                {% assign all_schedule_items = all_schedule_items | push: item_key %}
+                {% assign lecture_dates = lecture_dates | push: actual_date %}
+                {% assign class_date_index = class_date_index | plus: 1 %}
+            {% endif %}
+        {% endfor %}
+    {% endfor %}
+{% endif %}
+
+{% comment %} 添加额外事件 {% endcomment %}
+{% for event in site.data.additional_events.additional_events %}
+    {% assign item_key = event.date | append: "|" | append: event.type | append: "|" | append: event.topic %}
+    {% assign all_schedule_items = all_schedule_items | push: item_key %}
+{% endfor %}
+
+{% comment %} 按日期排序 {% endcomment %}
+{% assign sorted_items = all_schedule_items | sort %}
+{% assign last_week = 0 %}
+{% assign current_week_class = "week-odd" %}
+
+{% comment %} 渲染sorted的schedule {% endcomment %}
+{% for item in sorted_items %}
+    {% assign parts = item | split: "|" %}
+    {% assign item_date = parts[0] %}
+    {% assign item_type = parts[1] %}
+    {% assign has_lecture_today = lecture_dates contains item_date %}
+    {% assign item_timestamp = item_date | date: "%s" | plus: 0 %}
+    {% assign diff_seconds = item_timestamp | minus: first_week_start_timestamp %}
+    {% assign week_number = diff_seconds | divided_by: 604800 | plus: 1 %}
+    {% if week_number < 1 %}
+        {% assign week_number = 1 %}
+    {% endif %}
+
+    {% if week_number != last_week %}
+        {% assign week_offset_seconds = week_number | minus: 1 | times: 604800 %}
+        {% assign week_start_timestamp = first_week_start_timestamp | plus: week_offset_seconds %}
+        {% assign week_end_timestamp = week_start_timestamp | plus: 518400 %}
+        {% assign current_week_class = "week-odd" %}
+        {% if week_number | modulo: 2 == 0 %}
+            {% assign current_week_class = "week-even" %}
+        {% endif %}
+        <li class="table-row table-week {{ current_week_class }}">
+            <div class="col col-week">Week {{ week_number }} ({{ week_start_timestamp | date: "%m/%d" }} - {{ week_end_timestamp | date: "%m/%d" }})</div>
+        </li>
+        {% assign last_week = week_number %}
+    {% endif %}
+
+    {% if item_type == "lecture" and lecture_sequence and lecture_sequence.size > 0 %}
+        {% assign lecture_index = parts[2] | plus: 0 %}
+        {% assign lecture_item = lecture_sequence[lecture_index] %}
+        {% assign item_topic = lecture_item.topic %}
+    {% else %}
+        {% assign item_topic = parts[2] %}
+    {% endif %}
+    
+    {% if item_type == "lecture" or item_type == "no_class" or has_lecture_today == false %}
+    <li class="table-row table-row-{{ item_type }} {{ current_week_class }}">
+        <div class="col col-date">
+            <strong>{{ item_date | date: "%m/%d" }} {{ item_date | date: "%a" }}</strong>
+        </div>
+        <div class="col col-topic">
+            <strong>{{ item_topic }}</strong>
+            {% if item_type == "lecture" %}
+                {% assign has_related_events = false %}
+                {% for event in site.data.additional_events.additional_events %}
+                    {% if event.date == item_date %}
+                        {% assign has_related_events = true %}
+                    {% endif %}
+                {% endfor %}
+                {% if has_related_events %}
+                <div class="lecture-sub-events">
+                    {% for event in site.data.additional_events.additional_events %}
+                        {% if event.date == item_date %}
+                        <div class="lecture-sub-event lecture-sub-event-{{ event.type }}">
+                            <span class="event-label">{{ event.type | replace: "_", " " | capitalize }}</span>
+                            <span class="event-topic">{{ event.topic }}</span>
+                        </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+                {% endif %}
+            {% endif %}
+            {% if item_type != "lecture" and item_type != "no_class" %}
+                <br><span class="event-type">{{ item_type | replace: "_", " " | capitalize }}</span>
+            {% endif %}
+        </div>
+        <div class="col col-materials">
+            {% comment %} 查找材料 {% endcomment %}
+            {% if item_type == "lecture" and lecture_sequence and lecture_sequence.size > 0 %}
+                {% assign lecture_index = parts[2] | plus: 0 %}
+                {% assign lecture_item = lecture_sequence[lecture_index] %}
+                {% if lecture_item and lecture_item.materials %}
+                    <ul class="material-list">
+                    {% for material in lecture_item.materials %}
+                        <li><a href="{{ material.url }}" target="_blank">{{ material.name }}</a></li>
+                    {% endfor %}
+                            </ul>
+                {% endif %}
+            {% elsif item_type == "lecture" %}
+                {% comment %} 根据topic查找lecture材料 {% endcomment %}
+                {% for week_data in site.data.course_schedule.lectures %}
+                    {% assign possible_days = "monday,tuesday,wednesday,thursday,friday,saturday,sunday" | split: "," %}
+                    {% for day_name in possible_days %}
+                        {% assign day_content = nil %}
+                        {% case day_name %}
+                            {% when "monday" %}
+                                {% assign day_content = week_data.monday %}
+                            {% when "tuesday" %}
+                                {% assign day_content = week_data.tuesday %}
+                            {% when "wednesday" %}
+                                {% assign day_content = week_data.wednesday %}
+                            {% when "thursday" %}
+                                {% assign day_content = week_data.thursday %}
+                            {% when "friday" %}
+                                {% assign day_content = week_data.friday %}
+                            {% when "saturday" %}
+                                {% assign day_content = week_data.saturday %}
+                            {% when "sunday" %}
+                                {% assign day_content = week_data.sunday %}
+                        {% endcase %}
+                        
+                        {% if day_content and day_content.topic == item_topic and day_content.materials %}
+                            <ul class="material-list">
+                            {% for material in day_content.materials %}
+                                <li><a href="{{ material.url }}" target="_blank">{{ material.name }}</a></li>
+                            {% endfor %}
+                            </ul>
+                            {% break %}
+                        {% endif %}
+                    {% endfor %}
+                {% endfor %}
+            {% endif %}
+            {% if item_type == "lecture" %}
+                {% assign has_event_materials = false %}
+                {% for event in site.data.additional_events.additional_events %}
+                    {% if event.date == item_date and event.materials %}
+                        {% assign has_event_materials = true %}
+                    {% endif %}
+                {% endfor %}
+                {% if has_event_materials %}
+                    <ul class="material-list event-material-list">
+                    {% for event in site.data.additional_events.additional_events %}
+                        {% if event.date == item_date and event.materials %}
+                            {% for material in event.materials %}
+                                <li class="event-material">
+                                    <span class="event-material-label">{{ event.type | replace: "_", " " | capitalize }}:</span>
+                                    <a href="{{ material.url }}" target="_blank">{{ material.name }}</a>
+                                </li>
+                            {% endfor %}
+                        {% endif %}
+                    {% endfor %}
+                    </ul>
+                {% endif %}
+            {% elsif item_type != "no_class" %}
+                {% comment %} 查找额外事件材料 {% endcomment %}
+                {% for event in site.data.additional_events.additional_events %}
+                    {% if event.date == item_date and event.topic == item_topic and event.materials %}
+                        <ul class="material-list">
+                        {% for material in event.materials %}
+                            <li><a href="{{ material.url }}" target="_blank">{{ material.name }}</a></li>
+                        {% endfor %}
+                        </ul>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+        </div>
+    </li>
+    {% endif %}
+{% endfor %}

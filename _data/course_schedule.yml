@@ -1,0 +1,122 @@
+course_schedule:
+  semester_start: '2026-08-24'
+  semester_end: '2026-12-08'
+  class_days:
+  - day: tuesday
+    time: '17:00'
+  - day: thursday
+    time: '17:00'
+  holidays:
+  - '2026-11-26'
+lectures: []
+lecture_sequence:
+- topic: Course Introduction
+  materials:
+  - name: Overview.pdf
+    url: https://xieyaxiongfly.github.io/CSE589_fall_2026/static_files/uploads/Overview.pdf
+- topic: Introduction of Networks (part 1)
+  materials:
+  - name: Chapter_1_P1.pdf
+    url: https://xieyaxiongfly.github.io/CSE589_fall_2026/static_files/uploads/Chapter_1_P1.pdf
+- topic: Introduction of Networks (part 2)
+  materials:
+  - name: Chapter_1_P2.pdf
+    url: https://xieyaxiongfly.github.io/CSE589_fall_2026/static_files/uploads/Chapter_1_P2.pdf
+- topic: Introduction of Networks (part 3)
+  materials:
+  - name: Chapter_1_P3.pdf
+    url: https://xieyaxiongfly.github.io/CSE589_fall_2026/static_files/uploads/Chapter_1_P3.pdf
+- topic: Application Layer (part 1)
+  materials:
+  - name: Chapter_2_P1.pdf
+    url: https://xieyaxiongfly.github.io/CSE589_fall_2026/static_files/uploads/Chapter_2_P1.pdf
+- topic: Application Layer (part 2)
+  materials:
+  - name: Chapter_2_P2.pdf
+    url: https://xieyaxiongfly.github.io/CSE589_fall_2026/static_files/uploads/Chapter_2_P2.pdf
+- topic: Application Layer (part 3)
+  materials:
+  - name: Chapter_2_P3.pdf
+    url: https://xieyaxiongfly.github.io/CSE589_fall_2026/static_files/uploads/Chapter_2_P3.pdf
+- topic: Application Layer (part 4)
+  materials:
+  - name: Chapter_2_P4.pdf
+    url: https://xieyaxiongfly.github.io/CSE589_fall_2026/static_files/uploads/Chapter_2_P4.pdf
+- topic: Transport Layer (part 1)
+  materials:
+  - name: Chapter_3_P1.pdf
+    url: https://xieyaxiongfly.github.io/CSE589_fall_2026/static_files/uploads/Chapter_3_P1.pdf
+- topic: Transport Layer (part 2)
+  materials:
+  - name: Chapter_3_P2.pdf
+    url: https://xieyaxiongfly.github.io/CSE589_fall_2026/static_files/uploads/Chapter_3_P2.pdf
+- topic: Transport Layer (part 3)
+  materials:
+  - name: Chapter_3_P3.pdf
+    url: https://xieyaxiongfly.github.io/CSE589_fall_2026/static_files/uploads/Chapter_3_P3.pdf
+- topic: Transport Layer (part 4)
+  materials:
+  - name: Chapter_3_P4.pdf
+    url: https://xieyaxiongfly.github.io/CSE589_fall_2026/static_files/uploads/Chapter_3_P4.pdf
+- topic: Mid-Term Exam Review
+  materials: []
+- topic: Mid-Term Exam
+  materials: []
+- topic: Transport Layer (part 5)
+  materials:
+  - name: Chapter_3_P5.pdf
+    url: https://xieyaxiongfly.github.io/CSE589_fall_2026/static_files/uploads/Chapter_3_P5.pdf
+- topic: 'Network Layer: Data Plane (part 1)'
+  materials:
+  - name: Chapter_4_P1.pdf
+    url: https://xieyaxiongfly.github.io/CSE589_fall_2026/static_files/uploads/Chapter_4_P1.pdf
+- topic: 'Network Layer: Data Plane (part 2)'
+  materials:
+  - name: Chapter_4_P2.pdf
+    url: https://xieyaxiongfly.github.io/CSE589_fall_2026/static_files/uploads/Chapter_4_P2.pdf
+- topic: 'Network Layer: Data Plane (part 3)'
+  materials:
+  - name: Chapter_4_P3.pdf
+    url: https://xieyaxiongfly.github.io/CSE589_fall_2026/static_files/uploads/Chapter_4_P3.pdf
+- topic: 'Network Layer: Data Plane (part 4)'
+  materials:
+  - name: Chapter_4_P4.pdf
+    url: https://xieyaxiongfly.github.io/CSE589_fall_2026/static_files/uploads/Chapter_4_P4.pdf
+- topic: 'Network Layer: Control Plane (part 1)'
+  materials:
+  - name: Chapter_5_P1.pdf
+    url: https://xieyaxiongfly.github.io/CSE589_fall_2026/static_files/uploads/Chapter_5_P1.pdf
+- topic: 'Network Layer: Control Plane (part 2)'
+  materials:
+  - name: Chapter_5_P2.pdf
+    url: https://xieyaxiongfly.github.io/CSE589_fall_2026/static_files/uploads/Chapter_5_P2.pdf
+- topic: 'Network Layer: Control Plane (part 3)'
+  materials:
+  - name: Chapter_5_P3.pdf
+    url: https://xieyaxiongfly.github.io/CSE589_fall_2026/static_files/uploads/Chapter_5_P3.pdf
+- topic: 'Network Layer: Control Plane (part 4)'
+  materials:
+  - name: Chapter_5_P4.pdf
+    url: https://xieyaxiongfly.github.io/CSE589_fall_2026/static_files/uploads/Chapter_5_P4.pdf
+- topic: Link Layer and LANs (part 1)
+  materials:
+  - name: Chapter_6_S26_P1.pdf
+    url: https://xieyaxiongfly.github.io/CSE589_fall_2026/static_files/uploads/Chapter_6_S26_P1.pdf
+- topic: Link Layer and LANs (part 2)
+  materials:
+  - name: Chapter_6_P2.pdf
+    url: https://xieyaxiongfly.github.io/CSE589_fall_2026/static_files/uploads/Chapter_6_P2.pdf
+- topic: Wireless and Mobile Networks
+  materials:
+  - name: Chapter_7_s26.pdf
+    url: https://xieyaxiongfly.github.io/CSE589_fall_2026/static_files/uploads/Chapter_7_s26.pdf
+- topic: Final Exam Review
+  materials:
+  - name: final-exam_overview_26.pdf
+    url: https://xieyaxiongfly.github.io/CSE589_fall_2026/static_files/uploads/final-exam_overview_26.pdf
+- topic: No Class
+  materials: []
+- topic: TBD
+  materials: []
+- topic: TBD
+  materials: []

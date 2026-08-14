@@ -1,0 +1,851 @@
+{% extends "base.html" %}
+
+{% block title %}Schedule Management{% endblock %}
+
+{% block content %}
+<style>
+    .lecture-card {
+        background: linear-gradient(180deg, #ffffff 0%, #fbfbfb 100%);
+    }
+    .materials-list {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        margin-top: 12px;
+    }
+    .material-pill {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        padding: 10px 12px;
+        border: 1px solid #e5e5e5;
+        border-radius: 10px;
+        background: #ffffff;
+    }
+    .material-pill-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: #111111;
+        text-decoration: none;
+        font-weight: 600;
+    }
+    .material-pill-link:hover {
+        color: #111111;
+        text-decoration: underline;
+    }
+    .material-empty {
+        border: 1px dashed #d4d4d4;
+        border-radius: 10px;
+        padding: 10px 12px;
+        color: #777777;
+        background: #fcfcfc;
+        font-size: 13px;
+    }
+</style>
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">Schedule & Lectures Management</h1>
+    <a href="{{ url_for('material_library') }}" class="btn btn-outline-primary btn-sm">
+        <i class="fas fa-folder-open me-1"></i>Open Material Library
+    </a>
+</div>
+
+<!-- Course Schedule Settings -->
+<div class="card mb-4">
+    <div class="card-header">
+        <h5 class="mb-0">Course Schedule Settings</h5>
+    </div>
+    <div class="card-body">
+        <form method="POST" action="{{ url_for('update_schedule_settings') }}">
+            <div class="row">
+                <div class="col-md-6">
+                    <label for="semester_start" class="form-label">Semester Start Date</label>
+                    <input type="date" class="form-control" id="semester_start" name="semester_start" 
+                           value="{{ schedule.course_schedule.semester_start if schedule.course_schedule else '' }}" required>
+                </div>
+                <div class="col-md-6">
+                    <label for="semester_end" class="form-label">Semester End Date</label>
+                    <input type="date" class="form-control" id="semester_end" name="semester_end" 
+                           value="{{ schedule.course_schedule.semester_end if schedule.course_schedule else '' }}" required>
+                </div>
+            </div>
+            
+            <div class="row mt-3">
+                <div class="col-12">
+                    <label class="form-label">Class Days & Times</label>
+                    <div id="class-days-container">
+                        {% if schedule.course_schedule and schedule.course_schedule.class_days %}
+                            {% for class_day in schedule.course_schedule.class_days %}
+                                <div class="row mb-2 class-day-row">
+                                    <div class="col-md-5">
+                                        <select class="form-select" name="class_days_day[]" required>
+                                            <option value="">Select Day</option>
+                                            <option value="monday" {% if class_day.day == 'monday' %}selected{% endif %}>Monday</option>
+                                            <option value="tuesday" {% if class_day.day == 'tuesday' %}selected{% endif %}>Tuesday</option>
+                                            <option value="wednesday" {% if class_day.day == 'wednesday' %}selected{% endif %}>Wednesday</option>
+                                            <option value="thursday" {% if class_day.day == 'thursday' %}selected{% endif %}>Thursday</option>
+                                            <option value="friday" {% if class_day.day == 'friday' %}selected{% endif %}>Friday</option>
+                                            <option value="saturday" {% if class_day.day == 'saturday' %}selected{% endif %}>Saturday</option>
+                                            <option value="sunday" {% if class_day.day == 'sunday' %}selected{% endif %}>Sunday</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-5">
+                                        <input type="time" class="form-control" name="class_days_time[]" 
+                                               value="{{ class_day.time if class_day.time else '' }}" required>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <button type="button" class="btn btn-outline-danger remove-class-day">Remove</button>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        {% else %}
+                            <div class="row mb-2 class-day-row">
+                                <div class="col-md-5">
+                                    <select class="form-select" name="class_days_day[]" required>
+                                        <option value="">Select Day</option>
+                                        <option value="monday">Monday</option>
+                                        <option value="tuesday" selected>Tuesday</option>
+                                        <option value="wednesday">Wednesday</option>
+                                        <option value="thursday">Thursday</option>
+                                        <option value="friday">Friday</option>
+                                        <option value="saturday">Saturday</option>
+                                        <option value="sunday">Sunday</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-5">
+                                    <input type="time" class="form-control" name="class_days_time[]" value="14:00" required>
+                                </div>
+                                <div class="col-md-2">
+                                    <button type="button" class="btn btn-outline-danger remove-class-day">Remove</button>
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                    <button type="button" class="btn btn-outline-secondary btn-sm" id="add-class-day">Add Class Day</button>
+                </div>
+            </div>
+            
+            <div class="row mt-3">
+                <div class="col-12">
+                    <label class="form-label">Holidays (no classes on these dates)</label>
+                    <div id="holidays-container">
+                        {% if schedule.course_schedule and schedule.course_schedule.holidays %}
+                            {% for holiday in schedule.course_schedule.holidays %}
+                                <div class="row mb-2 holiday-row">
+                                    <div class="col-md-6">
+                                        <input type="date" class="form-control" name="holidays[]" value="{{ holiday }}" required>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <button type="button" class="btn btn-outline-danger remove-holiday">Remove</button>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        {% else %}
+                            <div class="row mb-2 holiday-row">
+                                <div class="col-md-6">
+                                    <input type="date" class="form-control" name="holidays[]">
+                                </div>
+                                <div class="col-md-2">
+                                    <button type="button" class="btn btn-outline-danger remove-holiday">Remove</button>
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                    <button type="button" class="btn btn-outline-secondary btn-sm" id="add-holiday">Add Holiday</button>
+                    <div class="form-text">Pick dates when there is no class (e.g., 2026-03-16).</div>
+                </div>
+            </div>
+            
+            <div class="mt-3 text-end">
+                <button type="submit" class="btn btn-warning">Update Schedule Settings</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Add New Lecture Form -->
+<div class="card mb-4" id="add-lecture">
+    <div class="card-header">
+        <h5 class="mb-0">Add New Lecture</h5>
+    </div>
+    <div class="card-body">
+        <form method="POST" action="{{ url_for('add_lecture') }}">
+            <div class="row">
+                <div class="col-md-10">
+                    <label for="topic" class="form-label">Topic</label>
+                    <input type="text" class="form-control" id="topic" name="topic" required>
+                </div>
+                <div class="col-md-2 d-flex align-items-end">
+                    <button type="submit" class="btn btn-primary w-100">Add</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Lecture Sequence -->
+<div class="card">
+    <div class="card-header">
+        <h5 class="mb-0">Lecture Sequence</h5>
+    </div>
+    <div class="card-body">
+        {% if schedule.lecture_sequence %}
+            {% for lecture in schedule.lecture_sequence %}
+                <div class="card mb-3 lecture-item" data-lecture-index="{{ loop.index0 }}">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <h6 class="mb-0">Lecture {{ loop.index }}</h6>
+                            <div class="btn-group" role="group">
+                                <form method="POST" action="{{ url_for('move_lecture') }}" class="d-inline move-lecture-form">
+                                    <input type="hidden" name="index" value="{{ loop.index0 }}">
+                                    <input type="hidden" name="direction" value="up">
+                                    <button type="submit" class="btn btn-sm btn-outline-secondary move-lecture-btn" {% if loop.first %}disabled{% endif %} title="Move up">
+                                        <i class="fas fa-arrow-up"></i>
+                                    </button>
+                                </form>
+                                <form method="POST" action="{{ url_for('move_lecture') }}" class="d-inline move-lecture-form">
+                                    <input type="hidden" name="index" value="{{ loop.index0 }}">
+                                    <input type="hidden" name="direction" value="down">
+                                    <button type="submit" class="btn btn-sm btn-outline-secondary move-lecture-btn" {% if loop.last %}disabled{% endif %} title="Move down">
+                                        <i class="fas fa-arrow-down"></i>
+                                    </button>
+                                </form>
+                                <button type="button" class="btn btn-sm btn-outline-secondary edit-lecture-btn">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <form method="POST" action="{{ url_for('delete_lecture') }}" class="d-inline delete-lecture-form">
+                                    <input type="hidden" name="index" value="{{ loop.index0 }}">
+                                    <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Are you sure?')">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+
+                        <div class="border p-3 rounded lecture-card" data-index="{{ loop.index0 }}">
+                            {% set lecture_index = loop.index0 %}
+                            <!-- Display Mode -->
+                            <div class="lecture-display">
+                                <p class="mb-2"><strong class="lecture-topic">{{ lecture.topic }}</strong></p>
+                                <div class="materials-list">
+                                    {% if lecture.materials %}
+                                        {% for material in lecture.materials %}
+                                            <div class="material-pill">
+                                                <a href="{{ material.url }}" target="_blank" class="material-pill-link">
+                                                    <i class="fas fa-file-lines"></i>
+                                                    <span>{{ material.name }}</span>
+                                                </a>
+                                                <button type="button" class="btn btn-sm btn-outline-danger delete-material-btn"
+                                                        data-lecture-index="{{ lecture_index }}" data-index="{{ loop.index0 }}">
+                                                    <i class="fas fa-times"></i>
+                                                </button>
+                                            </div>
+                                        {% endfor %}
+                                    {% else %}
+                                        <div class="material-empty">No materials linked yet.</div>
+                                    {% endif %}
+                                </div>
+                                <button type="button" class="btn btn-sm btn-outline-success mt-2 add-material-btn">
+                                    <i class="fas fa-plus"></i> Add Material
+                                </button>
+                            </div>
+
+                            <!-- Edit Mode (hidden by default) -->
+                            <div class="lecture-edit" style="display: none;">
+                                <div class="mb-2">
+                                    <input type="text" class="form-control form-control-sm edit-topic"
+                                           value="{{ lecture.topic }}" placeholder="Lecture topic">
+                                </div>
+                                <div class="materials-edit">
+                                    {% if lecture.materials %}
+                                        {% for material in lecture.materials %}
+                                            <div class="row mb-1 material-edit-row">
+                                                <div class="col-5">
+                                                    <input type="text" class="form-control form-control-sm material-name-input"
+                                                           value="{{ material.name }}" placeholder="Material name">
+                                                </div>
+                                                <div class="col-6">
+                                                    <input type="text" class="form-control form-control-sm material-url-input"
+                                                           value="{{ material.url }}" placeholder="URL">
+                                                    <select class="form-select form-select-sm mt-1 material-file-select">
+                                                        <option value="">Choose uploaded file</option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-1">
+                                                    <button type="button" class="btn btn-sm btn-outline-danger remove-material-edit">
+                                                        <i class="fas fa-times"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        {% endfor %}
+                                    {% endif %}
+                                </div>
+                                <button type="button" class="btn btn-sm btn-outline-secondary add-material-edit">
+                                    <i class="fas fa-plus"></i> Add Material
+                                </button>
+                                <div class="mt-2">
+                                    <button type="button" class="btn btn-sm btn-success save-lecture-btn">Save</button>
+                                    <button type="button" class="btn btn-sm btn-secondary cancel-edit-btn">Cancel</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="alert alert-info">
+                <i class="fas fa-info-circle me-2"></i>
+                No lectures added yet. Use the form above to add your first lecture.
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Quick Link to Events -->
+<div class="card">
+    <div class="card-body text-center">
+        <h6 class="card-title">Manage Events & Deadlines</h6>
+        <p class="card-text">Add and manage assignments, exams, presentations, and other special events.</p>
+        <a href="{{ url_for('events') }}" class="btn btn-outline-primary">
+            <i class="fas fa-calendar-check me-2"></i>Go to Events & Deadlines
+        </a>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const PUBLIC_BASE = "{{ public_base }}";
+    const PUBLIC_ROOT = "{{ public_root }}";
+    window.publicBaseUrl = PUBLIC_BASE || '';
+    window.publicRootUrl = PUBLIC_ROOT || '';
+    window.uploadedFiles = [];
+    loadUploadedFiles();
+    
+    // Add class day functionality
+    document.getElementById('add-class-day').addEventListener('click', function() {
+        const container = document.getElementById('class-days-container');
+        const newRow = document.createElement('div');
+        newRow.className = 'row mb-2 class-day-row';
+        newRow.innerHTML = `
+            <div class="col-md-5">
+                <select class="form-select" name="class_days_day[]" required>
+                    <option value="">Select Day</option>
+                    <option value="monday">Monday</option>
+                    <option value="tuesday">Tuesday</option>
+                    <option value="wednesday">Wednesday</option>
+                    <option value="thursday">Thursday</option>
+                    <option value="friday">Friday</option>
+                    <option value="saturday">Saturday</option>
+                    <option value="sunday">Sunday</option>
+                </select>
+            </div>
+            <div class="col-md-5">
+                <input type="time" class="form-control" name="class_days_time[]" required>
+            </div>
+            <div class="col-md-2">
+                <button type="button" class="btn btn-outline-danger remove-class-day">Remove</button>
+            </div>
+        `;
+        container.appendChild(newRow);
+    });
+
+    // Add holiday functionality
+    document.getElementById('add-holiday').addEventListener('click', function() {
+        const container = document.getElementById('holidays-container');
+        const newRow = document.createElement('div');
+        newRow.className = 'row mb-2 holiday-row';
+        newRow.innerHTML = `
+            <div class="col-md-6">
+                <input type="date" class="form-control" name="holidays[]">
+            </div>
+            <div class="col-md-2">
+                <button type="button" class="btn btn-outline-danger remove-holiday">Remove</button>
+            </div>
+        `;
+        container.appendChild(newRow);
+    });
+
+    // Remove class day functionality
+    document.addEventListener('click', function(e) {
+        if (e.target.classList.contains('move-lecture-btn') || e.target.closest('.move-lecture-btn')) {
+            e.preventDefault();
+            handleMoveLecture(e.target.closest('form'));
+            return;
+        }
+
+        if (e.target.classList.contains('remove-class-day')) {
+            const container = document.getElementById('class-days-container');
+            if (container.children.length > 1) {
+                e.target.closest('.class-day-row').remove();
+            } else {
+                alert('You must have at least one class day.');
+            }
+        }
+
+        if (e.target.classList.contains('remove-holiday')) {
+            const container = document.getElementById('holidays-container');
+            if (container.children.length > 1) {
+                e.target.closest('.holiday-row').remove();
+            } else {
+                e.target.closest('.holiday-row').querySelector('input[type="date"]').value = '';
+            }
+        }
+        
+        // Handle inline editing
+        if (e.target.classList.contains('edit-lecture-btn') || e.target.closest('.edit-lecture-btn')) {
+            const wrapper = e.target.closest('.card');
+            const card = wrapper ? wrapper.querySelector('.lecture-card') : null;
+            if (card) {
+                card.querySelector('.lecture-display').style.display = 'none';
+                card.querySelector('.lecture-edit').style.display = 'block';
+            }
+        }
+        
+        if (e.target.classList.contains('cancel-edit-btn')) {
+            const card = e.target.closest('.lecture-card');
+            card.querySelector('.lecture-display').style.display = 'block';
+            card.querySelector('.lecture-edit').style.display = 'none';
+        }
+        
+        if (e.target.classList.contains('save-lecture-btn')) {
+            saveLectureEdit(e.target.closest('.lecture-card'));
+        }
+        
+        if (e.target.classList.contains('add-material-btn')) {
+            showAddMaterialModal(e.target.closest('.lecture-card'));
+        }
+        
+        if (e.target.classList.contains('delete-material-btn')) {
+            deleteMaterial(e.target);
+        }
+        
+        if (e.target.classList.contains('add-material-edit')) {
+            addMaterialEditRow(e.target.closest('.lecture-edit'));
+        }
+        
+        if (e.target.classList.contains('remove-material-edit')) {
+            e.target.closest('.material-edit-row').remove();
+        }
+        
+        // Handle additional events editing
+        if (e.target.classList.contains('edit-event-btn')) {
+            const card = e.target.closest('.event-card');
+            card.querySelector('.event-display').style.display = 'none';
+            card.querySelector('.event-edit').style.display = 'block';
+        }
+        
+        if (e.target.classList.contains('cancel-event-edit-btn')) {
+            const card = e.target.closest('.event-card');
+            card.querySelector('.event-display').style.display = 'block';
+            card.querySelector('.event-edit').style.display = 'none';
+        }
+        
+        if (e.target.classList.contains('save-event-btn')) {
+            saveEventEdit(e.target.closest('.event-card'));
+        }
+        
+        if (e.target.classList.contains('delete-event-btn')) {
+            deleteEvent(e.target.closest('.event-card'));
+        }
+        
+        if (e.target.classList.contains('add-event-material-btn')) {
+            showAddEventMaterialModal(e.target.closest('.event-card'));
+        }
+        
+        if (e.target.classList.contains('add-event-material-edit')) {
+            addEventMaterialEditRow(e.target.closest('.event-edit'));
+        }
+        
+        if (e.target.classList.contains('remove-event-material-edit')) {
+            e.target.closest('.event-material-edit-row').remove();
+        }
+    });
+});
+
+function handleMoveLecture(form) {
+    if (!form) return;
+    const index = form.querySelector('input[name="index"]').value;
+    const direction = form.querySelector('input[name="direction"]').value;
+    const currentCard = form.closest('.lecture-item');
+    if (!currentCard) return;
+
+    fetch(form.action, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: new URLSearchParams({
+            index: index,
+            direction: direction
+        })
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Move failed');
+        }
+        const parent = currentCard.parentElement;
+        if (!parent) return;
+        const sibling = direction === 'up' ? currentCard.previousElementSibling : currentCard.nextElementSibling;
+        if (!sibling || !sibling.classList.contains('lecture-item')) return;
+
+        if (direction === 'up') {
+            parent.insertBefore(currentCard, sibling);
+        } else {
+            parent.insertBefore(sibling, currentCard);
+        }
+        refreshLectureIndexes();
+    })
+    .catch(() => {
+        alert('Error moving lecture');
+    });
+}
+
+function refreshLectureIndexes() {
+    const lectureItems = document.querySelectorAll('.lecture-item');
+    lectureItems.forEach((item, idx) => {
+        item.dataset.lectureIndex = idx.toString();
+
+        const title = item.querySelector('h6');
+        if (title) {
+            title.textContent = `Lecture ${idx + 1}`;
+        }
+
+        item.querySelectorAll('form.move-lecture-form input[name="index"]').forEach(input => {
+            input.value = idx.toString();
+        });
+
+        const deleteForm = item.querySelector('form.delete-lecture-form input[name="index"]');
+        if (deleteForm) {
+            deleteForm.value = idx.toString();
+        }
+
+        const lectureCard = item.querySelector('.lecture-card');
+        if (lectureCard) {
+            lectureCard.dataset.index = idx.toString();
+        }
+
+        item.querySelectorAll('.delete-material-btn').forEach(btn => {
+            btn.dataset.lectureIndex = idx.toString();
+        });
+    });
+
+    lectureItems.forEach((item, idx) => {
+        const upButton = item.querySelector('form.move-lecture-form input[value="up"]')?.closest('button');
+        const downButton = item.querySelector('form.move-lecture-form input[value="down"]')?.closest('button');
+        if (upButton) {
+            upButton.disabled = idx === 0;
+        }
+        if (downButton) {
+            downButton.disabled = idx === lectureItems.length - 1;
+        }
+    });
+}
+
+function loadUploadedFiles() {
+    fetch('{{ url_for("get_uploaded_files") }}')
+    .then(response => response.json())
+    .then(data => {
+        window.uploadedFiles = data.files || [];
+        populateMaterialFileSelects(window.uploadedFiles);
+    })
+    .catch(error => {
+        console.error('Error loading files:', error);
+    });
+}
+
+// Save lecture edit
+function saveLectureEdit(card) {
+    const lectureIndex = card.dataset.index;
+    const topic = card.querySelector('.edit-topic').value;
+    
+    const materials = [];
+    card.querySelectorAll('.material-edit-row').forEach(row => {
+        const nameInput = row.querySelector('.material-name-input');
+        const urlInput = row.querySelector('.material-url-input');
+        if (nameInput && urlInput) {
+            const name = nameInput.value.trim();
+            const url = urlInput.value.trim();
+            if (name && url) {
+                materials.push({ name, url });
+            }
+        }
+    });
+    
+    fetch('{{ url_for("edit_lecture") }}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            index: parseInt(lectureIndex),
+            topic: topic,
+            materials: materials
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            location.reload();
+        } else {
+            alert('Error saving lecture: ' + data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Error saving lecture: ' + error.message);
+    });
+}
+
+// Add material edit row
+function addMaterialEditRow(editDiv) {
+    const materialsEdit = editDiv.querySelector('.materials-edit');
+    const newRow = document.createElement('div');
+    newRow.className = 'row mb-1 material-edit-row';
+    newRow.innerHTML = `
+        <div class="col-5">
+            <input type="text" class="form-control form-control-sm material-name-input" placeholder="Material name">
+        </div>
+        <div class="col-6">
+            <input type="text" class="form-control form-control-sm material-url-input" placeholder="URL">
+            <select class="form-select form-select-sm mt-1 material-file-select">
+                <option value="">Choose uploaded file</option>
+            </select>
+        </div>
+        <div class="col-1">
+            <button type="button" class="btn btn-sm btn-outline-danger remove-material-edit">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+    `;
+    materialsEdit.appendChild(newRow);
+    populateMaterialFileSelects(window.uploadedFiles || [], newRow);
+}
+
+function populateMaterialFileSelects(files, scope) {
+    const container = scope || document;
+    container.querySelectorAll('.material-file-select').forEach(select => {
+        if (select.dataset.populated === 'true') return;
+        if (!files || files.length === 0) {
+            select.dataset.populated = 'true';
+            return;
+        }
+        files.forEach(file => {
+            const option = document.createElement('option');
+            option.value = makePublicUrl(file.url || file.path);
+            option.textContent = file.name;
+            select.appendChild(option);
+        });
+        select.addEventListener('change', function() {
+            const row = this.closest('.material-edit-row');
+            if (!row) return;
+            const urlInput = row.querySelector('.material-url-input');
+            const nameInput = row.querySelector('.material-name-input');
+            if (urlInput && this.value) {
+                urlInput.value = this.value;
+            }
+            if (nameInput && this.value) {
+                const selected = this.options[this.selectedIndex]?.textContent || '';
+                if (!nameInput.value.trim()) {
+                    nameInput.value = selected;
+                }
+            }
+        });
+        select.dataset.populated = 'true';
+    });
+}
+
+function makePublicUrl(path) {
+    if (!path) return '';
+    if (/^https?:\/\//i.test(path)) {
+        if (window.publicBaseUrl && window.publicRootUrl && path.startsWith(window.publicRootUrl) && !path.startsWith(window.publicBaseUrl)) {
+            const rel = path.substring(window.publicRootUrl.length);
+            return `${window.publicBaseUrl}${rel.startsWith('/') ? rel : `/${rel}`}`;
+        }
+        return path;
+    }
+    if (!window.publicBaseUrl) return path;
+    const base = window.publicBaseUrl.replace(/\/$/, '');
+    const rel = path.startsWith('/') ? path : `/${path}`;
+    return `${base}${rel}`;
+}
+
+// Add material: switch to edit mode and add a row with file selector
+function showAddMaterialModal(card) {
+    const display = card.querySelector('.lecture-display');
+    const edit = card.querySelector('.lecture-edit');
+    if (display && edit) {
+        display.style.display = 'none';
+        edit.style.display = 'block';
+    }
+    addMaterialEditRow(edit);
+}
+
+// Delete material
+function deleteMaterial(button) {
+    if (confirm('Delete this material?')) {
+        const lectureIndex = button.dataset.lectureIndex;
+        const index = button.dataset.index;
+        
+        fetch('{{ url_for("delete_material") }}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                lecture_index: parseInt(lectureIndex),
+                index: parseInt(index)
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                location.reload();
+            } else {
+                alert('Error deleting material: ' + data.message);
+            }
+        })
+        .catch(error => {
+            alert('Error deleting material');
+        });
+    }
+}
+
+// Additional Events Functions
+
+// Save event edit
+function saveEventEdit(card) {
+    const index = card.dataset.index;
+    const date = card.querySelector('.edit-event-date').value;
+    const type = card.querySelector('.edit-event-type').value;
+    const topic = card.querySelector('.edit-event-topic').value;
+    
+    const materials = [];
+    card.querySelectorAll('.event-material-edit-row').forEach(row => {
+        const nameInput = row.querySelector('.event-material-name-input');
+        const urlInput = row.querySelector('.event-material-url-input');
+        if (nameInput && urlInput) {
+            const name = nameInput.value.trim();
+            const url = urlInput.value.trim();
+            if (name && url) {
+                materials.push({ name, url });
+            }
+        }
+    });
+    
+    fetch('{{ url_for("edit_additional_event") }}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            index: parseInt(index),
+            date: date,
+            type: type,
+            topic: topic,
+            materials: materials
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert('Event saved successfully!');
+            location.reload();
+        } else {
+            alert('Error saving event: ' + data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Error saving event');
+    });
+}
+
+// Delete event
+function deleteEvent(card) {
+    if (confirm('Are you sure you want to delete this event?')) {
+        const index = card.dataset.index;
+        
+        fetch('{{ url_for("delete_additional_event") }}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                index: parseInt(index)
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Event deleted successfully!');
+                location.reload();
+            } else {
+                alert('Error deleting event: ' + data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Error deleting event');
+        });
+    }
+}
+
+// Add event material edit row
+function addEventMaterialEditRow(editDiv) {
+    const materialsEdit = editDiv.querySelector('.event-materials-edit');
+    const newRow = document.createElement('div');
+    newRow.className = 'row mb-1 event-material-edit-row';
+    newRow.innerHTML = `
+        <div class="col-5">
+            <input type="text" class="form-control form-control-sm event-material-name-input" placeholder="Material name">
+        </div>
+        <div class="col-6">
+            <input type="text" class="form-control form-control-sm event-material-url-input" placeholder="URL">
+        </div>
+        <div class="col-1">
+            <button type="button" class="btn btn-sm btn-outline-danger remove-event-material-edit">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+    `;
+    materialsEdit.appendChild(newRow);
+}
+
+// Show add event material modal
+function showAddEventMaterialModal(card) {
+    const index = card.dataset.index;
+    
+    const name = prompt('Material name:');
+    if (!name) return;
+    
+    const url = prompt('Material URL:');
+    if (!url) return;
+    
+    fetch('{{ url_for("add_event_material") }}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            event_index: parseInt(index),
+            material_name: name,
+            material_url: url
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            location.reload();
+        } else {
+            alert('Error adding material: ' + data.message);
+        }
+    })
+    .catch(error => {
+        alert('Error adding material');
+    });
+}
+</script>
+{% endblock %}

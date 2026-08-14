@@ -1,0 +1,14 @@
+.sass-cache
+_site
+.jekyll-cache
+
+# macOS
+.DS_Store
+
+# Python (dashboard)
+__pycache__/
+*.pyc
+.venv/
+
+# Course material PDFs -- too large to push; uploaded to the site separately
+static_files/uploads/

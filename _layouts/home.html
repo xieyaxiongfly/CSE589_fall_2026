@@ -1,0 +1,12 @@
+---
+layout: default
+---
+
+<div class="home">
+    {% if site.data.home_modules and site.data.home_modules.modules and site.data.home_modules.modules.size > 0 %}
+        {% include home_modules.html %}
+    {% else %}
+        {{ content }}
+        {% include people_section.html %}
+    {% endif %}
+</div>
