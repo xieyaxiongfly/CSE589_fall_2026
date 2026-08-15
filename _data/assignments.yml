@@ -25,13 +25,14 @@ intro: "Programming, like composition, is an individual creative process. Indivi
   \ repository. Do NOT under any circumstances make your code public, including after\
   \ the course is over.**\r\n\r\n## The assignment details"
 assignments:
-- title: TCP Client–Server Messaging
+- title: TCP Client–Server Messaging (optional)
   link: ''
-  description: Build a TCP client and server where the client streams arbitrary‑length
-    input to the server, and the server accepts connections in a loop, prints received
-    messages, and keeps serving new clients. The focus is on reliable transmission
-    (chunked I/O and partial‑send handling), robust error management, and scripted
-    verification with short, long, and concurrent message tests.
+  description: "Build a TCP client and server where the client streams arbitrary‑length\
+    \ input to the server, and the server accepts connections in a loop, prints received\
+    \ messages, and keeps serving new clients. The focus is on reliable transmission\
+    \ (chunked I/O and partial‑send handling), robust error management, and scripted\
+    \ verification with short, long, and concurrent message tests.\r\n\r\n**NOTE**\
+    \ This assignment is optional and won't be graded."
 - title: Reliable Data Transfer over Unreliable Networks
   link: ''
   description: Implement a reliable transport layer for file delivery between a sender

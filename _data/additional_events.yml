@@ -1,1 +1,13 @@
-additional_events: []
+additional_events:
+- date: '2026-10-20'
+  type: assignment_due
+  topic: Reliable Data Transfer over Unreliable Networks
+  materials: []
+- date: '2026-12-01'
+  type: assignment_due
+  topic: Routing Protocols
+  materials: []
+- date: '2026-12-10'
+  type: exam
+  topic: Final Exam
+  materials: []

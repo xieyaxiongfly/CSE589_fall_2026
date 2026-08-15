@@ -1,4 +1,24 @@
 /**
+ * Schedule event palette: (row tint, accent bar, solid label block).
+ *
+ * Single source of truth for both presentations of an event -- the standalone
+ * row and the label nested under a lecture -- so adding a type here colours it
+ * everywhere instead of silently falling back to grey.
+ */
+$event-colors: (
+    lecture:        (#e8f6ff, #4a90d9, #14415f),
+    homework:       (#e7f0ff, #3b6fd4, #1f3a73),
+    homework_due:   (#ffe7d6, #e07a3f, #7a341f),
+    project:        (#dff5e4, #2f9e5c, #1f5b33),
+    project_due:    (#e7ffe7, #2f9e5c, #17512c),
+    assignment:     (#eef0ff, #6b6fd4, #2f3373),
+    assignment_due: (#fff3cd, #d9a406, #6b5200),
+    exam:           (#ffe3e3, #d64545, #7a1f1f),
+    presentation:   (#e6f7ff, #2f8fc4, #1f4a73),
+    no_class:       (#f1f1f1, #b0b0b0, #666666)
+);
+
+/**
  * Reset some basic elements
  */
 body,
@@ -332,49 +352,32 @@ a.tosu {
         background-color: #dbe2e8;
     }
 
-    .table-row-assignment_due {
-        background-color: #fff3cd;
-    }
+    /* Needs li.table-row.<type> rather than a bare .table-row-<type>:
+       li.week-odd / li.week-even above set their own background at element+class
+       specificity, so a plain class selector loses and the tint vanishes. */
+    @each $type, $c in $event-colors {
+        li.table-row.table-row-#{$type} {
+            background-color: nth($c, 1);
+            border-left: 5px solid nth($c, 2);
 
-    .table-row-homework {
-        background-color: #e7f0ff;
-    }
-
-    .table-row-homework_due {
-        background-color: #ffe7d6;
-    }
-
-    .table-row-exam {
-        background-color: #ffe3e3;
-    }
-
-    .table-row-no_class {
-        background-color: #f1f1f1;
-    }
-
-    .table-row-presentation {
-        background-color: #e6f7ff;
-    }
-
-    .table-row-project_due {
-        background-color: #e7ffe7;
-    }
-
-    .table-row-project {
-        background-color: #dff5e4;
-    }
-
-    .table-row-lecture {
-        background-color: #e8f6ff;
+            /* Solid block so the kind of event reads at a glance; the dark
+               shade keeps white text above 4.5:1 contrast. */
+            .event-type {
+                background-color: nth($c, 3);
+                color: #ffffff;
+            }
+        }
     }
 
     /* Legacy styles for backwards compatibility */
-    .table-row-assignment {
+    li.table-row.table-row-assignment {
         background-color: #f0f0f0;
+        border-left: 5px solid #b0b0b0;
     }
 
-    .table-row-due {
+    li.table-row.table-row-due {
         background-color: #f5f5f5;
+        border-left: 5px solid #b0b0b0;
     }
 
     .col-date {
@@ -397,11 +400,21 @@ a.tosu {
     flex-basis: 45%;
     line-height: 1.3;
         
+    /* Matches .lecture-sub-event .event-label, so an event reads the same
+       whether it stands alone or hangs off a lecture. Colours come from the
+       per-type rules in the $event-colors loop. */
     .event-type {
-        font-size: 12px;
-        color: #666;
-        font-style: italic;
-        text-transform: capitalize;
+        display: inline-block;
+        margin-top: 4px;
+        font-size: 11px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.4px;
+        padding: 2px 8px;
+        border-radius: 10px;
+        background-color: #e0e0e0;
+        color: #444444;
+        white-space: nowrap;
     }
 }
 
@@ -431,34 +444,14 @@ a.tosu {
     white-space: nowrap;
 }
 
-.lecture-sub-event-homework .event-label {
-    background-color: #cfe2ff;
-    color: #1f3a73;
-}
-
-.lecture-sub-event-homework_due .event-label {
-    background-color: #ffd9c2;
-    color: #7a341f;
-}
-
-.lecture-sub-event-project .event-label {
-    background-color: #cfead6;
-    color: #1f5b33;
-}
-
-.lecture-sub-event-project_due .event-label {
-    background-color: #bfe7c9;
-    color: #1f5b33;
-}
-
-.lecture-sub-event-exam .event-label {
-    background-color: #ffd1d1;
-    color: #7a1f1f;
-}
-
-.lecture-sub-event-presentation .event-label {
-    background-color: #d6f0ff;
-    color: #1f4a73;
+/* Driven by the same $event-colors map as the standalone rows: tinted block,
+   dark text of the matching hue. A type added to the map is covered here too. */
+@each $type, $c in $event-colors {
+    .lecture-sub-event-#{$type} .event-label {
+        background-color: nth($c, 1);
+        color: nth($c, 3);
+        border: 1px solid nth($c, 2);
+    }
 }
 
 .event-material-list {

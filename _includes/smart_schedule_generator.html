@@ -142,7 +142,13 @@ Smart Schedule Generator
     {% assign parts = item | split: "|" %}
     {% assign item_date = parts[0] %}
     {% assign item_type = parts[1] %}
-    {% assign has_lecture_today = lecture_dates contains item_date %}
+    {% comment %} contains is only valid inside an if -- in an assign Liquid keeps
+    just the array and drops the rest, so this was always truthy and every event
+    landing on a non-lecture day was silently skipped. {% endcomment %}
+    {% assign has_lecture_today = false %}
+    {% if lecture_dates contains item_date %}
+        {% assign has_lecture_today = true %}
+    {% endif %}
     {% assign item_timestamp = item_date | date: "%s" | plus: 0 %}
     {% assign diff_seconds = item_timestamp | minus: first_week_start_timestamp %}
     {% assign week_number = diff_seconds | divided_by: 604800 | plus: 1 %}

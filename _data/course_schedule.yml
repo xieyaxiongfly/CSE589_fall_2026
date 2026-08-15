@@ -1,12 +1,13 @@
 course_schedule:
   semester_start: '2026-08-24'
-  semester_end: '2026-12-08'
+  semester_end: '2026-12-07'
   class_days:
   - day: tuesday
-    time: '17:00'
+    time: '14:00'
   - day: thursday
-    time: '17:00'
+    time: '14:00'
   holidays:
+  - '2026-10-13'
   - '2026-11-26'
 lectures: []
 lecture_sequence:
