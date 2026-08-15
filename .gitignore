@@ -10,5 +10,9 @@ __pycache__/
 *.pyc
 .venv/
 
+# Ruby gems for local Jekyll preview (start-site.sh)
+vendor/
+.bundle/
+
 # Course material PDFs -- too large to push; uploaded to the site separately
 static_files/uploads/
