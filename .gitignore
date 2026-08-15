@@ -14,5 +14,11 @@ __pycache__/
 vendor/
 .bundle/
 
-# Course material PDFs -- too large to push; uploaded to the site separately
-static_files/uploads/
+# Slides this connection cannot upload. Pushes corrupt partway through above
+# roughly 10MB -- at a random offset each attempt, on port 22 and 443 alike,
+# while downloads verify clean -- so these four never make it through. They
+# live on disk; host them elsewhere or retry from another network.
+static_files/uploads/Chapter_6_S26_P1.pdf
+static_files/uploads/Chapter_6_P2.pdf
+static_files/uploads/Chapter_7_s26.pdf
+static_files/uploads/final-exam_overview_26.pdf
