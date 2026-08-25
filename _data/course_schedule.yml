@@ -13,8 +13,8 @@ lectures: []
 lecture_sequence:
 - topic: Course Introduction
   materials:
-  - name: Overview.pdf
-    url: https://xieyaxiongfly.github.io/CSE589_fall_2026/static_files/uploads/Overview.pdf
+  - name: Overview_Fall_2026.pdf
+    url: https://xieyaxiongfly.github.io/CSE589_fall_2026/static_files/uploads/Overview_Fall_2026.pdf
 - topic: Introduction of Networks (part 1)
   materials:
   - name: Chapter_1_P1.pdf
