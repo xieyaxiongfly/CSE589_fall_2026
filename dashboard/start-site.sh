@@ -7,7 +7,11 @@
 # Companion to start.sh: that one runs the editing dashboard, this one runs
 # the Jekyll site so you can see what the edits actually look like.
 #
-# Gems install into <site>/vendor/bundle, never into the system gem path --
+# Gems install into ~/.gems/cse589-site, never into the project folder or the
+# system gem path. The project lives inside Dropbox, and Jekyll's native-extension
+# gems (racc, json, eventmachine, ...) are thousands of small files -- Dropbox
+# syncing them mid-write corrupts the compiled extensions ("missing extensions"
+# errors on start). Same reasoning as start.sh's venv living outside Dropbox.
 # macOS ships Ruby 2.6.10, which Jekyll no longer supports and which should
 # not be written to anyway. A Homebrew Ruby is required; see the error below.
 
@@ -15,6 +19,7 @@ set -euo pipefail
 
 DASHBOARD_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 SITE_ROOT="$(dirname "$DASHBOARD_DIR")"   # same layout app.py assumes
+GEMS_ROOT="$HOME/.gems/cse589-site"       # kept outside Dropbox on purpose
 PORT=4000
 
 cd "$SITE_ROOT"
@@ -39,26 +44,28 @@ if [ -z "$RUBY_BIN" ]; then
       brew install ruby
 
   Then re-run this script. Nothing else on your Mac is affected -- gems for
-  this site go into vendor/bundle inside the project.
+  this site go into ~/.gems/cse589-site, outside the project.
 EOF
     exit 1
 fi
 
 export PATH="$RUBY_BIN:$PATH"
-export GEM_HOME="$SITE_ROOT/vendor/gems"          # keep bundler itself local too
+export GEM_HOME="$GEMS_ROOT/gems"                 # keep bundler itself out of Dropbox
 export PATH="$GEM_HOME/bin:$PATH"
-export BUNDLE_PATH="$SITE_ROOT/vendor/bundle"     # keep site gems local
+export BUNDLE_PATH="$GEMS_ROOT/bundle"            # keep site gems out of Dropbox
 
 echo "Using Ruby $("$RUBY_BIN/ruby" -e 'print RUBY_VERSION') from $RUBY_BIN"
 
 # --- Bootstrap bundler + gems (first run only) --------------------------------
+mkdir -p "$GEMS_ROOT"
+
 if ! command -v bundle >/dev/null 2>&1; then
-    echo "→ Installing bundler into vendor/gems..."
+    echo "→ Installing bundler into $GEM_HOME..."
     gem install bundler --no-document --quiet
 fi
 
-if [ ! -d "$BUNDLE_PATH" ]; then
-    echo "→ First run: installing site gems into vendor/bundle (a few minutes)..."
+if ! bundle check >/dev/null 2>&1; then
+    echo "→ Installing/updating site gems into $BUNDLE_PATH (a few minutes)..."
     bundle install
 fi
 
