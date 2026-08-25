@@ -26,7 +26,7 @@ intro: "Programming, like composition, is an individual creative process. Indivi
   \ the course is over.**\r\n\r\n## The assignment details"
 assignments:
 - title: TCP Client–Server Messaging (optional)
-  link: ''
+  link: https://github.com/xieyaxiongfly/CSE589_ProgrammingAssignment/tree/main/A1_socket
   description: "Build a TCP client and server where the client streams arbitrary‑length\
     \ input to the server, and the server accepts connections in a loop, prints received\
     \ messages, and keeps serving new clients. The focus is on reliable transmission\
@@ -34,7 +34,7 @@ assignments:
     \ verification with short, long, and concurrent message tests.\r\n\r\n**NOTE**\
     \ This assignment is optional and won't be graded."
 - title: Reliable Data Transfer over Unreliable Networks
-  link: ''
+  link: https://github.com/xieyaxiongfly/CSE589_ProgrammingAssignment/tree/main/A2_reliable
   description: Implement a reliable transport layer for file delivery between a sender
     and receiver that preserves data integrity and ordering over lossy, delayed, and
     reordered packet networks. Your implementation should handle sequencing, acknowledgments,
