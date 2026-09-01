@@ -59,14 +59,14 @@ lecture_sequence:
   materials:
   - name: Chapter_3_P4.pdf
     url: https://xieyaxiongfly.github.io/CSE589_fall_2026/static_files/uploads/Chapter_3_P4.pdf
-- topic: Mid-Term Exam Review
-  materials: []
-- topic: Mid-Term Exam
-  materials: []
 - topic: Transport Layer (part 5)
   materials:
   - name: Chapter_3_P5.pdf
     url: https://xieyaxiongfly.github.io/CSE589_fall_2026/static_files/uploads/Chapter_3_P5.pdf
+- topic: Mid-Term Exam Review
+  materials: []
+- topic: Mid-Term Exam
+  materials: []
 - topic: 'Network Layer: Data Plane (part 1)'
   materials:
   - name: Chapter_4_P1.pdf
