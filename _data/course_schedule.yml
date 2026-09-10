@@ -33,8 +33,10 @@ lecture_sequence:
     url: https://xieyaxiongfly.github.io/CSE589_fall_2026/static_files/uploads/Chapter_2_P1.pdf
 - topic: Application Layer (part 2)
   materials:
-  - name: Chapter_2_P2.pdf
-    url: https://xieyaxiongfly.github.io/CSE589_fall_2026/static_files/uploads/Chapter_2_P2.pdf
+  - name: CSE589_Ch2_P2_socket.pdf
+    url: https://xieyaxiongfly.github.io/CSE589_fall_2026/static_files/uploads/CSE589_Ch2_P2_socket.pdf
+  - name: CSE589_Web_and_HTTP.pdf
+    url: https://xieyaxiongfly.github.io/CSE589_fall_2026/static_files/uploads/CSE589_Web_and_HTTP.pdf
 - topic: Application Layer (part 3)
   materials:
   - name: Chapter_2_P3.pdf
