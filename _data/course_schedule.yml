@@ -35,16 +35,14 @@ lecture_sequence:
   materials:
   - name: CSE589_Ch2_P2_socket.pdf
     url: https://xieyaxiongfly.github.io/CSE589_fall_2026/static_files/uploads/CSE589_Ch2_P2_socket.pdf
-  - name: CSE589_Web_and_HTTP.pdf
-    url: https://xieyaxiongfly.github.io/CSE589_fall_2026/static_files/uploads/CSE589_Web_and_HTTP.pdf
 - topic: Application Layer (part 3)
   materials:
-  - name: Chapter_2_P3.pdf
-    url: https://xieyaxiongfly.github.io/CSE589_fall_2026/static_files/uploads/Chapter_2_P3.pdf
+  - name: CSE589_DNS.pdf
+    url: https://xieyaxiongfly.github.io/CSE589_fall_2026/static_files/uploads/CSE589_DNS.pdf
 - topic: Application Layer (part 4)
   materials:
-  - name: Chapter_2_P4.pdf
-    url: https://xieyaxiongfly.github.io/CSE589_fall_2026/static_files/uploads/Chapter_2_P4.pdf
+  - name: CSE589_Web_and_HTTP.pdf
+    url: https://xieyaxiongfly.github.io/CSE589_fall_2026/static_files/uploads/CSE589_Web_and_HTTP.pdf
 - topic: Transport Layer (part 1)
   materials:
   - name: Chapter_3_P1.pdf
