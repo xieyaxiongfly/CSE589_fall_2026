@@ -27,30 +27,34 @@ lecture_sequence:
   materials:
   - name: Chapter_1_P3.pdf
     url: https://xieyaxiongfly.github.io/CSE589_fall_2026/static_files/uploads/Chapter_1_P3.pdf
-- topic: Application Layer (part 1)
+- topic: 'Application: Introduction'
   materials:
   - name: Chapter_2_P1.pdf
     url: https://xieyaxiongfly.github.io/CSE589_fall_2026/static_files/uploads/Chapter_2_P1.pdf
-- topic: Application Layer (part 2)
+- topic: 'Application: Socket Programming'
   materials:
   - name: CSE589_Ch2_P2_socket.pdf
     url: https://xieyaxiongfly.github.io/CSE589_fall_2026/static_files/uploads/CSE589_Ch2_P2_socket.pdf
-- topic: Application Layer (part 3)
+- topic: 'Application: DNS'
   materials:
   - name: CSE589_DNS.pdf
     url: https://xieyaxiongfly.github.io/CSE589_fall_2026/static_files/uploads/CSE589_DNS.pdf
-- topic: Application Layer (part 4)
+- topic: 'Application: Web and HTTP'
   materials:
   - name: CSE589_Web_and_HTTP.pdf
     url: https://xieyaxiongfly.github.io/CSE589_fall_2026/static_files/uploads/CSE589_Web_and_HTTP.pdf
-- topic: Transport Layer (part 1)
+- topic: 'Application: Video Streaming'
   materials:
-  - name: Chapter_3_P1.pdf
-    url: https://xieyaxiongfly.github.io/CSE589_fall_2026/static_files/uploads/Chapter_3_P1.pdf
-- topic: Transport Layer (part 2)
+  - name: CSE589_Video_Streaming.pdf
+    url: https://xieyaxiongfly.github.io/CSE589_fall_2026/static_files/uploads/CSE589_Video_Streaming.pdf
+- topic: 'Transport Layer: Reliable Data Transfer'
   materials:
-  - name: Chapter_3_P2.pdf
-    url: https://xieyaxiongfly.github.io/CSE589_fall_2026/static_files/uploads/Chapter_3_P2.pdf
+  - name: CSE589_Transport_Reliable_Transfer.pdf
+    url: https://xieyaxiongfly.github.io/CSE589_fall_2026/static_files/uploads/CSE589_Transport_Reliable_Transfer.pdf
+- topic: 'Transport Layer: Pipelining'
+  materials:
+  - name: CSE589_Transport_Pipelining.pdf
+    url: https://xieyaxiongfly.github.io/CSE589_fall_2026/static_files/uploads/CSE589_Transport_Pipelining.pdf
 - topic: Transport Layer (part 3)
   materials:
   - name: Chapter_3_P3.pdf
@@ -59,14 +63,14 @@ lecture_sequence:
   materials:
   - name: Chapter_3_P4.pdf
     url: https://xieyaxiongfly.github.io/CSE589_fall_2026/static_files/uploads/Chapter_3_P4.pdf
-- topic: Transport Layer (part 5)
-  materials:
-  - name: Chapter_3_P5.pdf
-    url: https://xieyaxiongfly.github.io/CSE589_fall_2026/static_files/uploads/Chapter_3_P5.pdf
 - topic: Mid-Term Exam Review
   materials: []
 - topic: Mid-Term Exam
   materials: []
+- topic: Transport Layer (part 5)
+  materials:
+  - name: Chapter_3_P5.pdf
+    url: https://xieyaxiongfly.github.io/CSE589_fall_2026/static_files/uploads/Chapter_3_P5.pdf
 - topic: 'Network Layer: Data Plane (part 1)'
   materials:
   - name: Chapter_4_P1.pdf
@@ -116,8 +120,6 @@ lecture_sequence:
   - name: final-exam_overview_26.pdf
     url: https://xieyaxiongfly.github.io/CSE589_fall_2026/static_files/uploads/final-exam_overview_26.pdf
 - topic: No Class
-  materials: []
-- topic: TBD
   materials: []
 - topic: TBD
   materials: []
