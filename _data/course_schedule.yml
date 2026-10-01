@@ -55,10 +55,10 @@ lecture_sequence:
   materials:
   - name: CSE589_Transport_Pipelining.pdf
     url: https://xieyaxiongfly.github.io/CSE589_fall_2026/static_files/uploads/CSE589_Transport_Pipelining.pdf
-- topic: Transport Layer (part 3)
+- topic: 'Transport Layer: Congestion Control'
   materials:
-  - name: Chapter_3_P3.pdf
-    url: https://xieyaxiongfly.github.io/CSE589_fall_2026/static_files/uploads/Chapter_3_P3.pdf
+  - name: CSE589_Transport_Congestion_Control.pdf
+    url: https://xieyaxiongfly.github.io/CSE589_fall_2026/static_files/uploads/CSE589_Chapter_3_Part_5_Congestion_Control.pdf
 - topic: Transport Layer (part 4)
   materials:
   - name: Chapter_3_P4.pdf
