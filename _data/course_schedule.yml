@@ -64,7 +64,9 @@ lecture_sequence:
   - name: CSE589_Transport_Congestion_Control.pdf
     url: https://xieyaxiongfly.github.io/CSE589_fall_2026/static_files/uploads/CSE589_Chapter_3_Part_5_Congestion_Control.pdf
 - topic: Mid-Term Exam Review
-  materials: []
+  materials:
+  - name: CSE589_Midterm_Review.pdf
+    url: https://xieyaxiongfly.github.io/CSE589_fall_2026/static_files/uploads/CSE589_Midterm_Review.pdf
 - topic: Mid-Term Exam
   materials: []
 - topic: Transport Layer (part 5)
