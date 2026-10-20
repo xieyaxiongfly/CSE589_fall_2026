@@ -71,8 +71,8 @@ lecture_sequence:
   materials: []
 - topic: Transport Layer (part 5)
   materials:
-  - name: Chapter_3_P5.pdf
-    url: https://xieyaxiongfly.github.io/CSE589_fall_2026/static_files/uploads/Chapter_3_P5.pdf
+  - name: CSE589_Transport_TCP_UDP_QUIC.pdf
+    url: https://xieyaxiongfly.github.io/CSE589_fall_2026/static_files/uploads/CSE589_Chapter_3_Part_4_TCP_UDP_QUIC.pdf
 - topic: 'Network Layer: Data Plane (part 1)'
   materials:
   - name: Chapter_4_P1.pdf
