@@ -9,6 +9,7 @@ course_schedule:
   holidays:
   - '2026-10-13'
   - '2026-11-26'
+  - '2026-10-29'
 lectures: []
 lecture_sequence:
 - topic: Course Introduction
@@ -81,30 +82,20 @@ lecture_sequence:
   materials:
   - name: CSE589_Network_Layer_Forwarding.pdf
     url: https://xieyaxiongfly.github.io/CSE589_fall_2026/static_files/uploads/CSE589_Forwarding.pdf
-- topic: 'Network Layer: Data Plane (part 3)'
+- topic: 'Network Layer: IP Address'
   materials:
-  - name: Chapter_4_P3.pdf
-    url: https://xieyaxiongfly.github.io/CSE589_fall_2026/static_files/uploads/Chapter_4_P3.pdf
-- topic: 'Network Layer: Data Plane (part 4)'
-  materials:
-  - name: Chapter_4_P4.pdf
-    url: https://xieyaxiongfly.github.io/CSE589_fall_2026/static_files/uploads/Chapter_4_P4.pdf
-- topic: 'Network Layer: Control Plane (part 1)'
-  materials:
-  - name: Chapter_5_P1.pdf
-    url: https://xieyaxiongfly.github.io/CSE589_fall_2026/static_files/uploads/Chapter_5_P1.pdf
-- topic: 'Network Layer: Control Plane (part 2)'
-  materials:
-  - name: Chapter_5_P2.pdf
-    url: https://xieyaxiongfly.github.io/CSE589_fall_2026/static_files/uploads/Chapter_5_P2.pdf
-- topic: 'Network Layer: Control Plane (part 3)'
-  materials:
-  - name: Chapter_5_P3.pdf
-    url: https://xieyaxiongfly.github.io/CSE589_fall_2026/static_files/uploads/Chapter_5_P3.pdf
-- topic: 'Network Layer: Control Plane (part 4)'
-  materials:
-  - name: Chapter_5_P4.pdf
-    url: https://xieyaxiongfly.github.io/CSE589_fall_2026/static_files/uploads/Chapter_5_P4.pdf
+  - name: CSE589_Network_Layer_IP.pdf
+    url: https://xieyaxiongfly.github.io/CSE589_fall_2026/static_files/uploads/CSE589_IP.pdf
+- topic: 'Network Layer: Router'
+  materials: []
+- topic: 'Network Control Plane: Link State Algorithm'
+  materials: []
+- topic: 'Network Control Plane: Distance Vector Algorithm'
+  materials: []
+- topic: 'Network Control Plane: AS and OSPF Algorithm'
+  materials: []
+- topic: 'Network Control Plane: BGP Routing Algorithm'
+  materials: []
 - topic: Link Layer and LANs (part 1)
   materials:
   - name: Chapter_6_S26_P1.pdf
@@ -113,15 +104,7 @@ lecture_sequence:
   materials:
   - name: Chapter_6_P2.pdf
     url: https://xieyaxiongfly.github.io/CSE589_fall_2026/static_files/uploads/Chapter_6_P2.pdf
-- topic: Wireless and Mobile Networks
-  materials:
-  - name: Chapter_7_s26.pdf
-    url: https://xieyaxiongfly.github.io/CSE589_fall_2026/static_files/uploads/Chapter_7_s26.pdf
 - topic: Final Exam Review
   materials:
   - name: final-exam_overview_26.pdf
     url: https://xieyaxiongfly.github.io/CSE589_fall_2026/static_files/uploads/final-exam_overview_26.pdf
-- topic: No Class
-  materials: []
-- topic: TBD
-  materials: []
