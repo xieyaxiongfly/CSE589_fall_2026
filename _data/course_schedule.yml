@@ -87,7 +87,9 @@ lecture_sequence:
   - name: CSE589_Network_Layer_IP.pdf
     url: https://xieyaxiongfly.github.io/CSE589_fall_2026/static_files/uploads/CSE589_IP.pdf
 - topic: 'Network Layer: Router'
-  materials: []
+  materials:
+  - name: CSE589_Network_Layer_Router.pdf
+    url: https://xieyaxiongfly.github.io/CSE589_fall_2026/static_files/uploads/CSE589_Router.pdf
 - topic: 'Network Control Plane: Link State Algorithm'
   materials: []
 - topic: 'Network Control Plane: Distance Vector Algorithm'
