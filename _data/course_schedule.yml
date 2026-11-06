@@ -91,13 +91,21 @@ lecture_sequence:
   - name: CSE589_Network_Layer_Router.pdf
     url: https://xieyaxiongfly.github.io/CSE589_fall_2026/static_files/uploads/CSE589_Router.pdf
 - topic: 'Network Control Plane: Link State Algorithm'
-  materials: []
+  materials:
+  - name: CSE589_Network_Control_Plane_LinkState.pdf
+    url: https://xieyaxiongfly.github.io/CSE589_fall_2026/static_files/uploads/CSE589_LinkState.pdf
 - topic: 'Network Control Plane: Distance Vector Algorithm'
-  materials: []
+  materials:
+  - name: CSE589_Network_Control_Plane_DistanceVector.pdf
+    url: https://xieyaxiongfly.github.io/CSE589_fall_2026/static_files/uploads/CSE589_DistanceVector.pdf
 - topic: 'Network Control Plane: AS and OSPF Algorithm'
-  materials: []
+  materials:
+  - name: CSE589_Network_Control_Plane_OSPF.pdf
+    url: https://xieyaxiongfly.github.io/CSE589_fall_2026/static_files/uploads/CSE589_OSPF.pdf
 - topic: 'Network Control Plane: BGP Routing Algorithm'
-  materials: []
+  materials:
+  - name: CSE589_Network_Control_Plane_BGP.pdf
+    url: https://xieyaxiongfly.github.io/CSE589_fall_2026/static_files/uploads/CSE589_BGP.pdf
 - topic: Link Layer and LANs (part 1)
   materials:
   - name: Chapter_6_S26_P1.pdf
